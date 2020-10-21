@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 
 const userSchema = new mongoose.Schema({
   name: { type: String, required: [true, "Please Enter a name"] },
@@ -15,16 +16,20 @@ const userSchema = new mongoose.Schema({
     max: 50,
     required: [true, "Please Enter a Password"],
   },
-  confirmPassword: {
-    type: String,
-    min: 6,
-    max: 50,
-    required: [true, "Please Confirm Your Password"],
-  },
   isAdmin: {
     type: Boolean,
     default: false,
   },
+});
+
+userSchema.pre("save", function (next) {
+  bcrypt.hash(this.password, 16, (err, hash) => {
+    if (err) {
+      return console.log(err);
+    }
+    this.password = hash;
+    next();
+  });
 });
 
 const User = mongoose.model("User", userSchema);
