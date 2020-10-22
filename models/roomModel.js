@@ -29,7 +29,7 @@ const roomSchema = new mongoose.Schema({
   locationName: { type: String, required: [true, "Please add a location"] },
   features: [String],
   images: [String],
-  createdAt: { type: Date, default: Date.now },
+  createdAt: { type: Date, default: Date.now() },
 });
 
 roomSchema.pre("save", function (next) {
